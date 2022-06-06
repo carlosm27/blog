@@ -9,4 +9,4 @@ This is the repo for a [Blacksheep and Piccolo tutorial](https://carlosmv.hashno
 - activate
 - `cd` to project folder
 - python -m pip install -r requirements.txt
-- - python main.py
+- python main.py

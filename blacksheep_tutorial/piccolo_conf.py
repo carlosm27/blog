@@ -6,7 +6,7 @@ DB = PostgresEngine(
     config={
         "database": "api_project",
         "user": "postgres",
-        "password": "Barcelona.1899",
+        "password": "Your password",
         "host": "localhost",
         "port": 5432,
     })

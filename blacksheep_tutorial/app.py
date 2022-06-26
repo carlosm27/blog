@@ -1,11 +1,10 @@
 import typing
 
-from fastapi import Response
 
 from piccolo.utils.pydantic import create_pydantic_model
 from piccolo.engine import engine_finder
 
-from blacksheep import Application, FromJSON, json, status_code, bad_request, Response, Content
+from blacksheep import Application, FromJSON, json, Response, Content
 
 from sql_app.tables import Expense
 

@@ -13,7 +13,7 @@ use sqlx::migrate::Migrator;
 use sqlx::{FromRow, PgPool};
 use url::Url;
 
-struct MyState(PgPool);
+
 
 #[derive(Serialize, FromRow)]
 struct StoredURL {
@@ -38,7 +38,7 @@ async fn redirect(id: String, Extension(pool): Extension<PgPool>) -> Result<Redi
 async fn shorten(url:String, Extension(pool): Extension<PgPool>) -> Result<String, StatusCode> {
     let id = &nanoid::nanoid!(6);
 
-    let parserd_url = Url::parse(&url).map_err(|err| {
+    let parserd_url = Url::parse(&url).map_err(|_err| {
         StatusCode::UNPROCESSABLE_ENTITY
     })?;
 
@@ -72,9 +72,7 @@ async fn axum(pgpool: PgPool) -> ShuttleAxum {
 
 }
 
-async fn root() -> &'static str {
-    "Hello, World!"
-}
+
 
 
 

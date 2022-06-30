@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	addr = flag.String("addr", "postgresql://postgres:Barcelona.1899@localhost:5432/expenses?sslmode=disable", "the address of the database")
+	addr = flag.String("addr", "database_url", "the address of the database")
 )
 
 func main() {

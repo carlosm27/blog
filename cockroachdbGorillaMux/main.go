@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 
@@ -9,12 +8,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var (
-	addr = flag.String("addr", "postgresql://postgres:Barcelona.1899@localhost:5432/expenses?sslmode=disable", "the address of the database")
-)
-
 func main() {
-	flag.Parse()
+
 	db, err := model.SetupDB()
 
 	if err != nil {

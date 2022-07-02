@@ -10,6 +10,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type updateExpense struct {
+	Amount      float64 `json:"amount"`
+	Description string  `json:"description"`
+	Category    string  `json:"category"`
+}
+
 type Server struct {
 	db *gorm.DB
 }
@@ -20,7 +26,7 @@ func NewServer(db *gorm.DB) *Server {
 
 func (s *Server) RegisterRouter(router *mux.Router) {
 	router.HandleFunc("/expenses", s.getExpenses)
-	router.HandleFunc("/expense/{id}", s.getExpense)
+	router.HandleFunc("/expense/{id}", s.getExpense).Methods("GET")
 	router.HandleFunc("/expense", s.createExpense).Methods("POST")
 	router.HandleFunc("/expense/{id}", s.updateExpense).Methods("PUT")
 	router.HandleFunc("/expense/{id}", s.deleteExpense).Methods("DELETE")
@@ -66,12 +72,15 @@ func (s *Server) getExpense(w http.ResponseWriter, r *http.Request) {
 func (s *Server) updateExpense(w http.ResponseWriter, r *http.Request) {
 	var expense model.Expenses
 
+	vars := mux.Vars(r)
+	id := vars["id"]
+
 	if err := json.NewDecoder(r.Body).Decode(&expense); err != nil {
 		http.Error(w, err.Error(), errToStatusCode(err))
 		return
 	}
 
-	if err := s.db.Save(expense).Error; err != nil {
+	if err := s.db.Where("id=?", id).Updates(&expense).Error; err != nil {
 		http.Error(w, err.Error(), errToStatusCode(err))
 	} else {
 		writeJsonResult(w, expense)
@@ -84,11 +93,10 @@ func (s *Server) deleteExpense(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	if err := s.db.Where("id = ?", id).Delete(&expense).Error; err != nil {
-		http.Error(w, err.Error(), errToStatusCode(err))
-	} else {
-		w.WriteHeader(http.StatusOK)
-
+		http.Error(w, err.Error(), http.StatusNotFound)
 	}
+
+	json.NewEncoder(w).Encode("Deleted")
 }
 
 func writeJsonResult(w http.ResponseWriter, res interface{}) {

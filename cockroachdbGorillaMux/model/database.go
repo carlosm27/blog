@@ -10,7 +10,7 @@ import (
 
 func SetupDB() (*gorm.DB, error) {
 
-	dsn := "postgresql://carlosm27:-l6ISkOmWHx79KSEENXiSA@free-tier14.aws-us-east-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full&options=--cluster%3Dwide-okapi-2719"
+	dsn := "DATABASE_URL"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database", err)

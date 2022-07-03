@@ -6,7 +6,7 @@ import (
 
 type Expenses struct {
 	gorm.Model
-	Amount      float64 `json:"amount" gorm:"not null"`
-	Description string  `json:"description" gorm:"not null"`
-	Category    string  `json:"category" gorm:"not null"`
+	Amount      float64 `json:"amount"`
+	Description string  `json:"description"`
+	Category    string  `json:"category"`
 }

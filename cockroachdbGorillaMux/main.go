@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -8,8 +9,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func main() {
+var (
+	addr = flag.String("addr", "database_url", "the address of the database")
+)
 
+func main() {
+	flag.Parse()
 	db, err := model.SetupDB()
 
 	if err != nil {

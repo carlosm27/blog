@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/carlosm27/blog/cockroachdb-gorillamux/model"
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
@@ -27,10 +26,10 @@ func NewServer(db *gorm.DB) *Server {
 
 func (s *Server) RegisterRouter(router *mux.Router) {
 	router.HandleFunc("/expenses", s.getExpenses)
-	router.HandleFunc("/expense/{id_expense}", s.getExpense).Methods("GET")
+	router.HandleFunc("/expense/{id}", s.getExpense).Methods("GET")
 	router.HandleFunc("/expense", s.createExpense).Methods("POST")
 	router.HandleFunc("/expense/{id_expense}", s.updateExpense).Methods("PUT")
-	router.HandleFunc("/expense/{id_expense}", s.deleteExpense).Methods("DELETE")
+	router.HandleFunc("/expense/{id}", s.deleteExpense).Methods("DELETE")
 
 }
 
@@ -56,8 +55,7 @@ func (s *Server) createExpense(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expense_id := uuid.New().String()
-	newExpense := &model.Expenses{IdExpense: expense_id, Amount: expense.Amount, Description: expense.Description, Category: expense.Category}
+	newExpense := &model.Expenses{Amount: expense.Amount, Description: expense.Description, Category: expense.Category}
 	if err := s.db.Create(newExpense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -71,9 +69,9 @@ func (s *Server) getExpense(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var expense model.Expenses
 	vars := mux.Vars(r)
-	id := vars["id_expense"]
+	id := vars["id"]
 
-	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
+	if err := s.db.Where("id = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
@@ -88,14 +86,14 @@ func (s *Server) updateExpense(w http.ResponseWriter, r *http.Request) {
 	var expense model.Expenses
 
 	vars := mux.Vars(r)
-	id := vars["id_expense"]
+	id := vars["id"]
 
 	if err := json.NewDecoder(r.Body).Decode(&updateExpense); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
+	if err := s.db.Where("id = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
@@ -113,9 +111,9 @@ func (s *Server) deleteExpense(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var expense model.Expenses
 	vars := mux.Vars(r)
-	id := vars["id_expense"]
+	id := vars["id"]
 
-	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
+	if err := s.db.Where("id = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}

@@ -28,7 +28,7 @@ func (s *Server) RegisterRouter(router *mux.Router) {
 	router.HandleFunc("/expenses", s.getExpenses)
 	router.HandleFunc("/expense/{id}", s.getExpense).Methods("GET")
 	router.HandleFunc("/expense", s.createExpense).Methods("POST")
-	router.HandleFunc("/expense/{id_expense}", s.updateExpense).Methods("PUT")
+	router.HandleFunc("/expense/{id}", s.updateExpense).Methods("PUT")
 	router.HandleFunc("/expense/{id}", s.deleteExpense).Methods("DELETE")
 
 }

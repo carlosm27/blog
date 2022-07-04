@@ -6,7 +6,7 @@ import (
 
 type Expenses struct {
 	gorm.Model
-	ID          uint    `json:"id"`
+	ID          string  `json:"id"`
 	IdExpense   string  `json:"id_expense" gorm:"type:uuid;default:uuid_generate_v4()"`
 	Amount      float64 `json:"amount"`
 	Description string  `json:"description"`

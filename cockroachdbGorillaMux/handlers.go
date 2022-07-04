@@ -40,10 +40,11 @@ func (s *Server) getExpenses(w http.ResponseWriter, r *http.Request) {
 
 	if err := s.db.Find(&expenses).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expenses)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(expenses)
+
 }
 
 func (s *Server) createExpense(w http.ResponseWriter, r *http.Request) {
@@ -56,12 +57,14 @@ func (s *Server) createExpense(w http.ResponseWriter, r *http.Request) {
 	}
 
 	expense_id := uuid.New().String()
-	if err := s.db.Create(&model.Expenses{IdExpense: expense_id, Amount: expense.Amount, Description: expense.Description, Category: expense.Category}).Error; err != nil {
+	newExpense := &model.Expenses{IdExpense: expense_id, Amount: expense.Amount, Description: expense.Description, Category: expense.Category}
+	if err := s.db.Create(newExpense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expense)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(newExpense)
+
 }
 
 func (s *Server) getExpense(w http.ResponseWriter, r *http.Request) {
@@ -72,11 +75,13 @@ func (s *Server) getExpense(w http.ResponseWriter, r *http.Request) {
 
 	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expense)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(expense)
+
 }
+
 func (s *Server) updateExpense(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var updateExpense UpdateExpense
@@ -92,14 +97,15 @@ func (s *Server) updateExpense(w http.ResponseWriter, r *http.Request) {
 
 	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	}
 
 	if err := s.db.Model(&expense).Updates(&model.Expenses{Amount: updateExpense.Amount, Description: updateExpense.Description, Category: updateExpense.Category}).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expense)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(expense)
 
 }
 
@@ -111,10 +117,13 @@ func (s *Server) deleteExpense(w http.ResponseWriter, r *http.Request) {
 
 	if err := s.db.Where("id_expense = ?", id).First(&expense).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
-	} else {
-		s.db.Delete(&expense)
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode("Deleted")
+		return
 	}
+	if err := s.db.Delete(&expense).Error; err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Expense Deleted")
 
 }

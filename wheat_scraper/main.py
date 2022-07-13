@@ -12,10 +12,15 @@ driver.get("https://www.macrotrends.net/2534/wheat-prices-historical-chart-data"
 
 rows = driver.find_elements(By.TAG_NAME, "tr")
 
+
 list_rows =[]
+
 for row in rows:
-    list_rows.append(row.text)
+
+    list_rows.append(str(row.text).replace(" ", ","))
+
     df = pd.DataFrame(list_rows)
-    df.to_csv('prices_wheat.csv')
+    df.to_csv('wheat_prices.csv')
+
 
 driver.quit()

@@ -1,20 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+import pandas as pd
+
 options = Options()
 options.headless = True
-options.add_argument("--windows-size=1920,1080")
-options.add_argument("start-maximized")
 
 driver = webdriver.Chrome(options=options, executable_path="C:/Users/PC/chrome_driver/chromedriver.exe")
+
 driver.get("https://www.macrotrends.net/2534/wheat-prices-historical-chart-data")
 
+rows = driver.find_elements(By.TAG_NAME, "tr")
 
-table = driver.find_element(By.TAG_NAME, "table")
-rows = table.find_elements(By.TAG_NAME, "tr")
-
+list_rows =[]
 for row in rows:
-
-    print(row.text)
+    list_rows.append(row.text)
+    df = pd.DataFrame(list_rows)
+    df.to_csv('prices_wheat.csv')
 
 driver.quit()

@@ -11,23 +11,8 @@ use std::net::SocketAddr;
 use serde::{Deserialize, Serialize};
 use serde_json::{json};
 
-use once_cell::sync::Lazy;
 use std::{io};
 
-use std::collections::HashMap;
-
-
-
-
-static USERS: Lazy<HashMap<u64, String>> = Lazy::new(|| {
-
-    let mut users = HashMap::new();
-     
-    users.insert(235, "Carlosmarcano2704".into());
-    users.insert(134, "Cmarcano2704".into());
-    users.insert(054, "FCB1899".into());
-    users
-});
 
 
 #[derive(Deserialize)]
@@ -48,16 +33,14 @@ async fn main() {
     let app = Router::new()
         .route("/", get(root))
         .route("/user", post(create_user))
-        .route("/users", get(all_users))
-        .route("/user/:id", get(get_user))
         .route("/hello/:name", get(json_hello))
-        .route("/hello.html", get_service(ServeFile::new("static/hello.html"))
-        .handle_error(|error: io::Error| async move {
-            (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Unhandled internal error: {}", error),
-            )
-        }));
+        .route("/static", get_service(ServeFile::new("static/hello.html"))
+            .handle_error(|error: io::Error| async move {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Unhandled internal error: {}", error),
+                )
+            }));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     tracing::info!("listening on {}", addr);
@@ -82,24 +65,10 @@ async fn create_user(Json(payload): Json<CreateUser>,) -> impl IntoResponse {
     (StatusCode::CREATED, Json(user))
 }
 
-async fn all_users() -> impl IntoResponse {
-    let users = USERS.clone();
-
-    (StatusCode::OK, Json(users))
-}
 
 async fn json_hello(Path(name): Path<String>) -> impl IntoResponse {
     let greeting = name.as_str();
     let hello = String::from("Hello ");
 
     (StatusCode::OK, Json(json!({"message": hello + greeting })))
-}
-
-
-async fn get_user(Path(id): Path<u64>) -> impl IntoResponse {
-
-    let user = USERS.get(&id);
-    Json(user)
-
-    
 }

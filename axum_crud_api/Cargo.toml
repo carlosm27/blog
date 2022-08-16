@@ -12,7 +12,6 @@ serde = "1.0.137"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3"}
 
-sqlx = { version = "0.5", features = ["runtime-tokio-native-tls", "chrono", "json", "postgres", "uuid"] }
+sqlx = { version = "0.5", features = ["runtime-tokio-native-tls", "json", "postgres"] }
 anyhow = "1.0.58"
-chrono = "0.4"
 serde_json = "1.0.57"

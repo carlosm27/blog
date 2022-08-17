@@ -1,0 +1,16 @@
+[package]
+name = "url-shortnr"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+
+[dependencies]
+shuttle-service = { version = "0.4.2", features = ["web-axum"] }
+axum = "0.5.15"
+sync_wrapper = "0.1.1"
+sqlx = { version = "0.6.1", features = ["runtime-tokio-native-tls", "postgres"] }
+serde = "1.0.137"
+nanoid = "0.4"
+url ="2.2"
+anyhow = "1.0.48"

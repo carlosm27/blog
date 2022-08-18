@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Extension},routing::{get, post}, Router,
+    extract::{Extension},routing::{get, post, put, delete}, Router,
 };
 
 use sqlx::postgres::PgPoolOptions;
@@ -27,9 +27,12 @@ async fn main() -> anyhow::Result<()> {
     .context("could not connect to database_url")?;
 
     let app = Router::new()
-        .route("/hello", get(hello))
+        .route("/hello", get(root))
         .route("/tasks", get(controllers::task::all_tasks))
         .route("/task", post(controllers::task::new_task))
+        .route("/task/:id",get(controllers::task::task))
+        .route("/task/:id", put(controllers::task::update_task))
+        .route("/task/:id", delete(controllers::task::delete_task))
         .layer(Extension(pool));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
@@ -42,6 +45,6 @@ async fn main() -> anyhow::Result<()> {
 
 }
 
-async fn hello() -> &'static str {
+async fn root() -> &'static str {
     "Hello, World!"
 }

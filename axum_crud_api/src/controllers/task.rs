@@ -35,7 +35,7 @@ pub async fn new_task(Json(task): Json<task::NewTask>, Extension(pool): Extensio
 }
 
 pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-    let sql = "SELECT * FROM task where values id=$1".to_string();
+    let sql = "SELECT * FROM task where id=$1".to_string();
 
     let task: task::Task = sqlx::query_as(&sql).bind(id).fetch_one(&pool).await.unwrap();
 
@@ -44,7 +44,7 @@ pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> imp
 
 pub async fn update_task(Path(id): Path<i32>, Json(task): Json<task::UpdateTask>, Extension(pool): Extension<PgPool>) -> impl IntoResponse {
 
-    sqlx::query("UPDATE FROM task SET task=$1 WHERE id=$2")
+    sqlx::query("UPDATE task SET task=$1 WHERE id=$2")
         .bind(&task.task)
         .bind(id)
         .execute(&pool)

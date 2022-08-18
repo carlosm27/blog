@@ -10,3 +10,8 @@ pub struct Task {
 pub struct NewTask {
     pub task: String,
 }
+
+#[derive(Deserialize, Serialize, sqlx::FromRow)]
+pub struct UpdateTask {
+    pub task: String,
+}

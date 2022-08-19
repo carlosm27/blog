@@ -15,13 +15,16 @@ use crate::{
 pub async fn all_tasks(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * FROM task ".to_string();
 
-    let task = sqlx::query_as::<_, task::Task>(&sql).fetch_all(&pool).await.unwrap();
+    let task = sqlx::query_as::<_, task::Task>(&sql)
+        .fetch_all(&pool)
+        .await.unwrap();
+        //.map_err(|_| {CustomError::InternalServerError});
 
     (StatusCode::OK, Json(task))
 }
 
 
-pub async fn new_task(Json(task): Json<task::NewTask>, Extension(pool): Extension<PgPool>) -> impl IntoResponse {
+pub async fn new_task(Json(task): Json<task::NewTask>, Extension(pool): Extension<PgPool>) ->Result <(StatusCode, Json<task::NewTask>), CustomError> {
     
 
     let sql = "INSERT INTO task (task) values ($1)";
@@ -30,9 +33,11 @@ pub async fn new_task(Json(task): Json<task::NewTask>, Extension(pool): Extensio
         .bind(&task.task)
         .execute(&pool)
         .await
-        .unwrap();
+        .map_err(|_| {
+            CustomError::BadRequest
+        });
 
-    (StatusCode::CREATED, Json(task))
+    Ok((StatusCode::CREATED, Json(task)))
 }
 
 pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> Result <Json<task::Task>, CustomError> {

@@ -6,6 +6,8 @@ use sqlx::postgres::PgPoolOptions;
 use std::net::SocketAddr;
 use std::fs;
 use anyhow::Context;
+
+mod errors;
 mod models;
 mod controllers;
 

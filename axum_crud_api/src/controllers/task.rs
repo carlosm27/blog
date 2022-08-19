@@ -40,7 +40,7 @@ pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> Res
     let sql = "SELECT * FROM task where id=$1".to_string();
 
     let task: task::Task = sqlx::query_as(&sql).bind(id).fetch_one(&pool).await
-        .map_err(|err| {
+        .map_err(|_| {
             CustomError::TaskNotFound
         })?;
 

@@ -4,10 +4,11 @@ use axum::http::StatusCode;
 
 use axum::{Extension, Json};
 use sqlx::PgPool;
-use serde_json::json;
+use serde_json::{json};
 
 use crate::{
-    models::task
+    models::task,
+    errors::CustomError,
 };
 
 
@@ -31,15 +32,20 @@ pub async fn new_task(Json(task): Json<task::NewTask>, Extension(pool): Extensio
         .await
         .unwrap();
 
-    (StatusCode::OK, Json(task))
+    (StatusCode::CREATED, Json(task))
 }
 
-pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> impl IntoResponse {
+pub async fn task(Path(id):Path<i32>, Extension(pool): Extension<PgPool>) -> Result <Json<task::Task>, CustomError> {
+    
     let sql = "SELECT * FROM task where id=$1".to_string();
 
-    let task: task::Task = sqlx::query_as(&sql).bind(id).fetch_one(&pool).await.unwrap();
+    let task: task::Task = sqlx::query_as(&sql).bind(id).fetch_one(&pool).await
+        .map_err(|err| {
+            CustomError::TaskNotFound
+        })?;
 
-    (StatusCode::OK, Json(task))
+    
+    Ok(Json(task))  
 }
 
 pub async fn update_task(Path(id): Path<i32>, Json(task): Json<task::UpdateTask>, Extension(pool): Extension<PgPool>) -> impl IntoResponse {

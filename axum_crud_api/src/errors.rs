@@ -1,10 +1,11 @@
 use axum::{http::StatusCode, response::IntoResponse, Json};
 use serde_json::json;
 
+
 pub enum CustomError {
     BadRequest,
     TaskNotFound,
-    InternalServerError
+    InternalServerError,
 }
 
 impl IntoResponse for CustomError {
@@ -20,3 +21,5 @@ impl IntoResponse for CustomError {
         (status, Json(json!({"error": error_message}))).into_response()
     }
 }
+
+

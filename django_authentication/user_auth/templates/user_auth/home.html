@@ -1,0 +1,24 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+  <body>
+  	<div class= "greeting">
+	    <h1> Welcome {{ user.username|default:'' }}, to the Django Auth site.</h1>
+  	</div>
+    
+  </body>
+
+<style>
+
+ .greeting {
+  
+  color: #F0FFFF;
+  text-align: center;
+  font-family: sans-serif;
+ } 
+
+</style>
+
+{% endblock content %}
+

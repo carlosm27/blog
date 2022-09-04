@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.views.generic.edit import CreateView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 
 # Create your views here.
 
@@ -18,5 +18,8 @@ class SignUp(CreateView):
 
 class Login(LoginView):
     form_class = AuthenticationForm
-    success_url = reverse_lazy("home")
-    template_name = "user_auth/registration/loginView.html"    
+    template_name = "user_auth/registration/login.html"
+
+class PasswordChange(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = "user_auth/registration/password_change_form.html"

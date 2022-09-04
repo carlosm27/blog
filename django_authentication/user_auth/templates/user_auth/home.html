@@ -5,6 +5,9 @@
   <body>
   	<div class= "greeting">
 	    <h1> Welcome {{ user.username|default:'' }}, to the Django Auth site.</h1>
+      {% if user.is_authenticated %}
+        <p> Change you password<a href="{% url 'password_change' %}"> Here</a></p>
+      {% endif %}    
   	</div>
     
   </body>

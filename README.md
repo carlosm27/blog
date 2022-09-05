@@ -1,5 +1,5 @@
 # Blog
-This is a repository with the source code of the tutorials I wrote for my personal blog in [Hashnode](https://carlosmv.hashnode.dev/) and Medium
+This is a repository with the source code of the tutorials I wrote for my personal blog in [Hashnode](https://carlosmv.hashnode.dev/) and [Medium](https://medium.com/@carlosmarcano2704)
 
 
 ### Tutorials
@@ -11,3 +11,4 @@ This is a repository with the source code of the tutorials I wrote for my person
 - [Getting Started with Axum](https://carlosmv.hashnode.dev/getting-started-with-axum-rust)
 - [Creating a REST API with Axum + Sqlx ](https://carlosmv.hashnode.dev/creating-a-rest-api-with-axum-sqlx-rust)
 - [Deploying an Axum URL Shortener with Shuttle](https://carlosmv.hashnode.dev/deploying-an-axum-url-shortener-with-shuttle-rust)
+-  [Building an authentication app with Django Authentication System](https://carlosmv.hashnode.dev/building-an-authentication-app-with-django-authentication-system-python#heading-signup).
